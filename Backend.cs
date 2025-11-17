@@ -84,18 +84,7 @@ namespace AIEditor
         private static Tensor LoadAndProcessImage(string imagePath)
         {
             using var image = SixLabors.ImageSharp.Image.Load<Rgb24>(imagePath);
-
-            if (image.PixelType.BitsPerPixel != 24)
-            {
-                throw new InvalidOperationException($"Expected 24bpp RGB image, got {image.PixelType.BitsPerPixel}bpp");
-            }
-
             var tensor = ImageToTensor(image);
-
-            if (tensor.shape.Length != 3 || tensor.shape[0] != 3)
-            {
-                throw new InvalidOperationException($"Expected tensor shape [3, H, W], got [{string.Join(", ", tensor.shape)}]");
-            }
 
             tensor = transforms.functional.resize(tensor, 256, 256);
 
