@@ -20,7 +20,8 @@ namespace AIEditor
         public MainWindow()
         {
             InitializeComponent();
-            Backend.InspectNET();
+            //Backend.InspectNET();
+            Test.Do();
         }
 
         private void SettingsClick(object sender, RoutedEventArgs e)
