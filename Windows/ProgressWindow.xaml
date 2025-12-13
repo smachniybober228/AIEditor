@@ -23,7 +23,6 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Заголовок -->
         <TextBlock Grid.Row="0" 
                    Text="Идет обработка изображений..." 
                    Margin="20,20,20,10"
@@ -32,7 +31,6 @@
                    FontWeight="Bold"
                    Foreground="#00ff9d"/>
 
-        <!-- ProgressBar -->
         <ProgressBar Grid.Row="1" 
                      Name="ProgressBarControl"
                      Height="20" 
@@ -48,7 +46,6 @@
             </ProgressBar.Effect>
         </ProgressBar>
 
-        <!-- Текст прогресса -->
         <TextBlock Grid.Row="2" 
                    Name="ProgressText"
                    Text="Подготовка..." 

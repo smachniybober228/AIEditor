@@ -9,6 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Weights\**" />
+    <EmbeddedResource Remove="Weights\**" />
+    <None Remove="Weights\**" />
+    <Page Remove="Weights\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Images\Castle.jpg" />
     <None Remove="Images\icon.png" />
     <None Remove="Images\National_Gallery.jpg" />
@@ -41,10 +48,6 @@
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
     <PackageReference Include="TorchSharp" Version="0.105.1" />
     <PackageReference Include="TorchVision" Version="0.105.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Weights\" />
   </ItemGroup>
 
 </Project>

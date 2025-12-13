@@ -1,6 +1,7 @@
-﻿using static TorchSharp.torchvision;
+﻿using AIEditor.Models.Parameters;
+using static TorchSharp.torchvision;
 
-namespace AIEditor
+namespace AIEditor.Models.Model
 {
     public static class ModelRegistry
     {

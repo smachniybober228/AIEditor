@@ -3,7 +3,7 @@ using Microsoft.Win32;
 using System.IO;
 using System.Windows.Media.Imaging;
 
-namespace AIEditor
+namespace AIEditor.Models
 {
     public static class ImageSaver
     {

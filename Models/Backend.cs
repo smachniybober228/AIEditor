@@ -1,22 +1,24 @@
+using AIEditor.Models.Model;
+using AIEditor.Models.Parameters;
 using AIEditor.Windows;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using TorchSharp;
 using TorchSharp.Modules;
 using static TorchSharp.torch;
 using static TorchSharp.torch.nn;
 using static TorchSharp.torch.optim;
 using static TorchSharp.torchvision;
 
-namespace AIEditor
+namespace AIEditor.Models
 {
     public static class Backend
     {
-        private static Device device;
+        private readonly static Device device;
 
-        private static Tensor imageForTarget;
+        private readonly static Tensor imageForTarget;
         static Backend()
         {
             device = cuda.is_available() ? CUDA : CPU;
@@ -29,7 +31,7 @@ namespace AIEditor
             int width = image.Width;
             int height = image.Height;
 
-            Tensor tensor = torch.zeros(new long[] { 1, 3, height, width }, torch.float32).to(device);
+            Tensor tensor = zeros(new long[] { 1, 3, height, width }, float32).to(device);
 
             for (int y = 0; y < height; y++)
             {
@@ -44,13 +46,14 @@ namespace AIEditor
             return tensor;
         }
 
+        // Устаревший метод
         private static Image<Rgb24> TensorToImage(Tensor input)
         {
             int height = (int)input.shape[2];
             int width = (int)input.shape[3];
 
             var image = new Image<Rgb24>(width, height);
-            Tensor sigma = torch.sigmoid(input);
+            Tensor sigma = sigmoid(input);
 
             for (int y = 0; y < height; y++)
             {
@@ -78,7 +81,7 @@ namespace AIEditor
             int width = (int)input.shape[3];
 
             byte[] pixelData = new byte[height * width * 4];
-            Tensor sigma = torch.sigmoid(input);
+            Tensor sigma = sigmoid(input);
 
             int index = 0;
             for (int y = 0; y < height; y++)
@@ -165,7 +168,7 @@ namespace AIEditor
 
             Tensor x = image.clone();
 
-            List<(string names, nn.Module)> seqs = net.named_children().ToList();
+            List<(string names, Module)> seqs = net.named_children().ToList();
 
             int convLayersIndex = 0;
             for (int i = 0; i < seqs.Count; i++)
@@ -203,13 +206,13 @@ namespace AIEditor
             long height = featureMap.shape[2];
             long width = featureMap.shape[3];
             Tensor f = featureMap.reshape(chans, height * width);
-            Tensor gram = torch.mm(f, f.t()) / (chans * height * width);
+            Tensor gram = mm(f, f.t()) / (chans * height * width);
             return gram;
         }
 
         private static Tensor CreateRandomTarget()
         {
-            Tensor tensor = torch.rand([1, 3, 256, 256], device: device);
+            Tensor tensor = rand([1, 3, 256, 256], device: device);
             tensor = NormalizeTensor(tensor);
             return tensor;
         }
@@ -219,11 +222,11 @@ namespace AIEditor
             switch (optType)
             {
                 case OptimizerType.RMSProp:
-                    return torch.optim.RMSProp([targetParam], lr: lr);
+                    return RMSProp([targetParam], lr: lr);
                 case OptimizerType.Adam:
-                    return torch.optim.Adam([targetParam], lr: lr);
+                    return Adam([targetParam], lr: lr);
                 case OptimizerType.Adagrad:
-                    return torch.optim.Adagrad([targetParam], lr: lr);
+                    return Adagrad([targetParam], lr: lr);
                 default:
                     throw new NotImplementedException();
             }
@@ -257,21 +260,27 @@ namespace AIEditor
 
             for (int i = 0; i < settings.NumEpochs; i++)
             {
-                progressWindow.UpdateProgress(i, settings.NumEpochs);
+                if (progressWindow.IsVisible)
+                    progressWindow.UpdateProgress(i, settings.NumEpochs);
+                else
+                {
+                    Application.Current.Dispatcher.Invoke(() => CustomMessageBox.Show("Вы прервали обучение!"));
+                    break;
+                }
 
                 var (targetFeatures, targetNames) = modelConfig.FeatureExtractor(targetParam, model);
-                Tensor styleLoss = torch.tensor(0.0f, device: device);
-                Tensor contentLoss = torch.tensor(0.0f, device: device);
+                Tensor styleLoss = tensor(0.0f, device: device);
+                Tensor contentLoss = tensor(0.0f, device: device);
 
                 for (int layerI = 0; layerI < targetNames.Count; layerI++)
                 {
                     if (modelConfig.ContentLayers.Contains(targetNames[layerI]))
-                        contentLoss += torch.mean((targetFeatures[layerI] - contentFeatures[layerI]).pow(2));
+                        contentLoss += mean((targetFeatures[layerI] - contentFeatures[layerI]).pow(2));
                     if (modelConfig.StyleLayers.Contains(targetNames[layerI]))
                     {
                         Tensor GTarget = GetGramMatrix(targetFeatures[layerI]);
                         Tensor GStyle = GetGramMatrix(styleFeatures[layerI]);
-                        styleLoss += torch.mean((GTarget - GStyle).pow(2)) * modelConfig.StyleLayerWeights[modelConfig.StyleLayers.IndexOf(targetNames[layerI])];
+                        styleLoss += mean((GTarget - GStyle).pow(2)) * modelConfig.StyleLayerWeights[modelConfig.StyleLayers.IndexOf(targetNames[layerI])];
                     }
                 }
                 Tensor combiLoss = settings.StyleScaling * styleLoss + contentLoss;
@@ -284,7 +293,6 @@ namespace AIEditor
             progressWindow.Complete();
             BitmapSource targetImage = TensorToBitmap(targetParam);
             return targetImage;
-
         }
     }
 }

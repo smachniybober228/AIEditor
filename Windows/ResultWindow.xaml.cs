@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using System.Windows.Media;
+﻿using AIEditor.Models;
+using System.Windows;
 using System.Windows.Media.Imaging;
 
 namespace AIEditor.Windows

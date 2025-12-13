@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace AIEditor
+namespace AIEditor.Models.Parameters
 {
     public enum OptimizerType
     {

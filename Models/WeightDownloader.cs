@@ -1,10 +1,7 @@
-﻿using AIEditor.Windows;
-using System.IO;
+﻿using System.IO;
 using System.Net.Http;
-using System.Security.Policy;
-using System.Text.RegularExpressions;
 
-namespace AIEditor
+namespace AIEditor.Models
 {
     public static class WeightDownloader
     {
@@ -15,7 +12,7 @@ namespace AIEditor
             {
                 using var httpClient = new HttpClient();
                 httpClient.DefaultRequestHeaders.Add("User-Agent", "AIEditor-App");
-                httpClient.Timeout = TimeSpan.FromMinutes(10);
+                httpClient.Timeout = TimeSpan.FromMinutes(20);
 
                 string url = "https://github.com/smachniybober228/AIEditor/releases/download/v1.0.0/" + weightName;
 

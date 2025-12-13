@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using AIEditor.Models.Parameters;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;

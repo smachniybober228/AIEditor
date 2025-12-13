@@ -2,8 +2,9 @@ using AIEditor.Windows;
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Windows;
 
-namespace AIEditor
+namespace AIEditor.Models.Parameters
 {
     public static class ParametersManager
     {
@@ -19,7 +20,7 @@ namespace AIEditor
                 }
                 catch (Exception ex)
                 {
-                    CustomMessageBox.Show($"Ошибка загрузки настроек: {ex.Message}. Использую настройки по умолчанию.");
+                    Application.Current.Dispatcher.Invoke(() => CustomMessageBox.Show($"Ошибка загрузки настроек: {ex.Message}. Использую настройки по умолчанию."));
                 }
             }
 
