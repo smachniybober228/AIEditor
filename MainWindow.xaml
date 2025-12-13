@@ -5,28 +5,92 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AIEditor"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="ИИ редактор изображений" MinWidth="720" MinHeight="450" Height="450" Width="800" Background="#0a0a0f"
+        Icon="/Images/icon.png">
+    <Window.Resources>
+        <Style x:Key="BorderStyle" TargetType="Border">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="BorderBrush" Value="#00ff9d"/>
+            <Setter Property="BorderThickness" Value="3"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Background" Value="#010133"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="FontSize" Value="22"/>
+            <Setter Property="MaxHeight" Value="75"/>
+            <Setter Property="MaxWidth" Value="300"/>
+            <Setter Property="BorderBrush" Value="#ff00ff"/>
+            <Setter Property="BorderThickness" Value="3"/>
+            <Setter Property="Background" Value="#010133"/>
+            <Setter Property="Foreground" Value="#e0e0e0"/>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#e0e0e0"/>
+            <Setter Property="FontSize" Value="22"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+    </Window.Resources>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
+            <ColumnDefinition Width="auto"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
             <RowDefinition/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Height="25" VerticalAlignment="Top">
+        <!--<Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Height="25" VerticalAlignment="Top">
             <MenuItem Header="Настройки" FontSize="15" Click="SettingsClick"/>
+        </Menu>-->
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="ИИ редактор изображений" FontSize="38" FontWeight="Black" Margin="20,20,20,20">
+            <TextBlock.Foreground>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                    <GradientStop Color="#00ff9d" Offset="0.0"/>
+                    <GradientStop Color="#ff00ff" Offset="1.0"/>
+                </LinearGradientBrush>
+            </TextBlock.Foreground>
+
+            <TextBlock.Effect>
+                <DropShadowEffect BlurRadius="20" 
+                          Opacity="0.7" 
+                          ShadowDepth="0"
+                          Color="#00ff9d"/>
+            </TextBlock.Effect>
+        </TextBlock>
+
+        <Menu Grid.Row="0" Grid.Column="3" Background="#0a0a0f" VerticalAlignment="Top" HorizontalAlignment="Right" Height="25" Margin="5">
+            <MenuItem Header="Настройки" FontSize="17" Click="SettingsClick" Foreground="#e0e0e0"/>
         </Menu>
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="Исходное изображение" FontSize="22" Margin="5" HorizontalAlignment="Center"/>
-        <TextBlock Grid.Row="1" Grid.Column="1" Text="Изображение стиля" FontSize="22" Margin="5" HorizontalAlignment="Center"/>
-        <Image Grid.Row="2" Grid.Column="0" Source="/Images/National_Gallery.jpg" Margin="5"/>
-        <Image Grid.Row="2" Grid.Column="1" Source="/Images/Castle.jpg" Margin="5"/>
-        <Button Grid.Row="3" Grid.Column="0" Content="Загрузить изображение" Margin="5" FontSize="22" MaxHeight="75" MaxWidth="250"/>
-        <Button Grid.Row="3" Grid.Column="1" Content="Загрузить изображение" Margin="5" FontSize="22" MaxHeight="75" MaxWidth="250"/>
-        <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Content="Обработать" Margin="5" FontSize="22" MaxHeight="75" MaxWidth="250"/>
+        
+        <Border Grid.Column="0" Grid.Row="1" Style="{StaticResource BorderStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Исходное изображение" HorizontalAlignment="Center"/>
+                <Image Name="ContentImage" Grid.Row="1" Grid.Column="0" Source="/Images/no_image.jpg" Margin="5"/>
+                <Button Grid.Row="3" Grid.Column="0" Content="Загрузить изображение" Click="LoadContentImage"/>
+            </Grid>
+        </Border>
+        <Button Grid.Column="1" Grid.Row="1" Content="Обработать" Click="ProcessImages" Height="40"/>
+        <Border Grid.Column="2" Grid.Row="1" Style="{StaticResource BorderStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Изображение стиля" HorizontalAlignment="Center"/>
+                <Image Name="StyleImage" Grid.Row="1" Source="/Images/no_image.jpg" Margin="5"/>
+                <Button Grid.Row="2" Content="Загрузить изображение" Margin="5" Click="LoadStyleImage"/>
+                <Button Grid.Row="3" Grid.Column="0" Content="Загрузить изображение" Click="LoadStyleImage"/>
+            </Grid>
+        </Border>
+
     </Grid>
 </Window>

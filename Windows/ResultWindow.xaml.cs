@@ -1,16 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
+﻿using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace AIEditor.Windows
 {
@@ -19,9 +9,24 @@ namespace AIEditor.Windows
     /// </summary>
     public partial class ResultWindow : Window
     {
-        public ResultWindow()
+        private BitmapSource bitmap { get; }
+        public ResultWindow(BitmapSource resultImage)
         {
             InitializeComponent();
+
+            bitmap = resultImage;
+            ResultImage.Source = resultImage;
+        }
+
+        private void BackToMainWindow(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
+        }
+
+        private void SaveImage(object sender, RoutedEventArgs e)
+        {
+            if (ImageSaver.SaveBitmapSource(bitmap))
+                DialogResult = true;
         }
     }
 }

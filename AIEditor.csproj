@@ -10,18 +10,28 @@
 
   <ItemGroup>
     <None Remove="Images\Castle.jpg" />
+    <None Remove="Images\icon.png" />
     <None Remove="Images\National_Gallery.jpg" />
+    <None Remove="Images\no_image.jpg" />
+    <None Remove="Images\no_image2.jpg" />
     <None Remove="Images\result.PNG" />
+    <None Remove="Images\vangog.jpg" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Images\Castle.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Images\icon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\National_Gallery.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\result.PNG">
+    <Content Include="Images\no_image.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\vangog.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -31,6 +41,10 @@
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
     <PackageReference Include="TorchSharp" Version="0.105.1" />
     <PackageReference Include="TorchVision" Version="0.105.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Weights\" />
   </ItemGroup>
 
 </Project>

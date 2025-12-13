@@ -3,10 +3,181 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:AIEditor.Windows"
+        xmlns:local="clr-namespace:AIEditor"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="SettingsWindow" Height="110" Width="250">
-    <Grid>
+        Title="Настройки" Width="285" Height="285" ResizeMode="NoResize" Background="#0a0a0f"
+        Icon="/Images/icon.png">
+    <Window.Resources>
+        <Style x:Key="CommonTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="Foreground" Value="#e0e0e0"/>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="SelectedIndex" Value="0"/>
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Background" Value="#010133"/>
+            <Setter Property="BorderBrush" Value="#00ff9d"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="#00ff9d"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="Height" Value="30"/>
+
+            <!-- Полный рабочий Template -->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <!-- Основной контейнер -->
+                            <Border x:Name="MainBorder"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="30"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Выбранный элемент -->
+                                    <ContentPresenter x:Name="ContentSite"
+                                              Grid.Column="0"
+                                              Content="{TemplateBinding SelectionBoxItem}"
+                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                              Margin="{TemplateBinding Padding}"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Left"/>
+
+                                    <!-- Кнопка для раскрытия (ToggleButton) -->
+                                    <ToggleButton x:Name="ToggleButton"
+                                          Grid.Column="1"
+                                          Background="Transparent"
+                                          BorderThickness="0"
+                                          IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                          Focusable="False">
+                                        <Path x:Name="Arrow"
+                                      Data="M0,0 L4,4 8,0 Z"
+                                      Fill="{TemplateBinding Foreground}"
+                                      Stretch="Uniform"
+                                      VerticalAlignment="Center"
+                                      HorizontalAlignment="Center"
+                                      Width="10"
+                                      Height="10"/>
+                                    </ToggleButton>
+                                </Grid>
+                            </Border>
+
+                            <!-- Выпадающий список -->
+                            <Popup x:Name="PART_Popup"
+                           Placement="Bottom"
+                           IsOpen="{TemplateBinding IsDropDownOpen}"
+                           AllowsTransparency="True"
+                           Focusable="False"
+                           PopupAnimation="Slide">
+                                <Border x:Name="DropDownBorder"
+                                Background="#1a1a2e"
+                                BorderBrush="#00ff9d"
+                                BorderThickness="1"
+                                MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <ScrollViewer>
+                                        <ItemsPresenter/>
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Grid>
+
+                        <!--<ControlTemplate.Triggers>
+                            -->
+                        <!-- Анимация стрелки при открытии -->
+                        <!--<Trigger Property="IsDropDownOpen" Value="True">
+                                <Setter TargetName="Arrow" Property="Data" Value="M0,4 L4,0 8,4 Z"/>
+                                <Setter TargetName="MainBorder" Property="BorderBrush" Value="#00ccff"/>
+                            </Trigger>-->
+
+                        <!-- Эффект при наведении -->
+                        <!--<Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="MainBorder" Property="BorderBrush" Value="#00ccff"/>
+                            </Trigger>-->
+
+                        <!-- Эффект при фокусе -->
+                        <!--
+                            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                <Setter TargetName="MainBorder" Property="BorderBrush" Value="#ff00ff"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>-->
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <!-- Стиль для элементов выпадающего списка -->
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style TargetType="ComboBoxItem">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Foreground" Value="#e0e0e0"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Padding" Value="8,6"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ComboBoxItem">
+                                    <Border x:Name="Bd"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    Padding="{TemplateBinding Padding}">
+                                        <ContentPresenter/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsHighlighted" Value="True">
+                                            <Setter TargetName="Bd" Property="Background" Value="#00ff9d"/>
+                                            <Setter Property="Foreground" Value="#0a0a0f"/>
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter TargetName="Bd" Property="Background" Value="#00ccff"/>
+                                            <Setter Property="Foreground" Value="#0a0a0f"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Background" Value="#010133"/>
+            <Setter Property="Foreground" Value="#00ff9d"/>
+            <Setter Property="BorderBrush" Value="#00ff9d"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="BorderBrush" Value="#ff00ff"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="#010133"/>
+            <Setter Property="Foreground" Value="#e0e0e0"/>
+        </Style>
+
+        <ObjectDataProvider x:Key="OptimizerTypes"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:OptimizerType"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="ModelTypes"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:ModelType"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Window.Resources>
+    <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
@@ -16,16 +187,33 @@
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Text="Выбранная модель:" FontSize="15" Margin="5" HorizontalAlignment="Right"/>
-            <ComboBox Grid.Column="1" Margin="5" ItemsSource="{Binding Models}" SelectedIndex="0"/>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Style="{StaticResource CommonTextStyle}" Grid.Column="0" Grid.Row="0" Text="Выбранная модель:"/>
+            <ComboBox Name="InputModel" Grid.Column="1" Grid.Row="0" ItemsSource="{Binding Source={StaticResource ModelTypes}}"/>
+            <TextBlock Style="{StaticResource CommonTextStyle}" Grid.Column="0" Grid.Row="1" Text="Кол-во эпох:"/>
+            <TextBox Name="InputEpochs" Grid.Column="1" Grid.Row="1" KeyDown="InputInt_KeyDown" TextChanged="InputInt_TextChanged"/>
+            <TextBlock Style="{StaticResource CommonTextStyle}" Grid.Column="0" Grid.Row="2" Text="Масштаб стиля:"/>
+            <TextBox Name="InputStyleScaling" Grid.Column="1" Grid.Row="2" KeyDown="InputInt_KeyDown" TextChanged="InputInt_TextChanged"/>
+            <TextBlock Style="{StaticResource CommonTextStyle}" Grid.Column="0" Grid.Row="3" Text="Шаг обучения:"/>
+            <TextBox Name="InputLR" Grid.Column="1" Grid.Row="3" KeyDown="InputDouble_KeyDown" TextChanged="InputDouble_TextChanged"/>
+            <TextBlock Style="{StaticResource CommonTextStyle}" Grid.Column="0" Grid.Row="4" Text="Тип оптимизатора:"/>
+            <ComboBox Name="InputOptimizer" Grid.Column="1" Grid.Row="4" ItemsSource="{Binding Source={StaticResource OptimizerTypes}}"/>
+            <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5" Content="По умолчанию" Click="DefaultSettings"/>
         </Grid>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="Сохранить" FontSize="15" Margin="5"/>
-            <Button Grid.Column="1" Content="Вернуться" FontSize="15" Margin="5"/>
+            <Button Grid.Column="0" Content="Сохранить" Click="SaveSettings"/>
+            <Button Grid.Column="1" Content="Вернуться" Click="BackToMainWindow"/>
         </Grid>
     </Grid>
 </Window>
